@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -351,37 +352,4 @@ def send_to_wechat(title, content):
     
     data = {
         'title': title,
-        'desp': content
-    }
-    
-    try:
-        print(f"\n准备发送消息...")
-        print(f"标题: {title}")
-        print(f"内容长度: {len(content)} 字符")
-        
-        response = requests.post(url, data=data, timeout=10)
-        result = response.json()
-        
-        print(f"Server酱返回: {result}")
-        
-        if result.get('code') == 0:
-            print("✓ 消息推送成功!")
-            return True
-        else:
-            print(f"✗ 消息推送失败: {result}")
-            return False
-    except Exception as e:
-        print(f"✗ 发送消息异常: {e}")
-        return False
-
-
-def main():
-    """主函数"""
-    print("=" * 60)
-    print(f"📺 每日影视推荐任务开始 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("=" * 60)
-    
-    # 获取实时数据
-    print("\n[1/4] 📡 获取热门电视剧实时数据...")
-    tv_shows = get_realtime_data_tv()
-    print(f"✓ 获取到 {len(tv_shows)} 部电视剧")
+        'desp': conte
