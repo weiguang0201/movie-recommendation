@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -352,4 +351,69 @@ def send_to_wechat(title, content):
     
     data = {
         'title': title,
-        'desp': conte
+        'desp': content
+    }
+    
+    try:
+        print(f"\n准备发送消息...")
+        print(f"标题: {title}")
+        print(f"内容长度: {len(content)} 字符")
+        
+        response = requests.post(url, data=data, timeout=10)
+        result = response.json()
+        
+        print(f"Server酱返回: {result}")
+        
+        if result.get('code') == 0:
+            print("✓ 消息推送成功!")
+            return True
+        else:
+            print(f"✗ 消息推送失败: {result}")
+            return False
+    except Exception as e:
+        print(f"✗ 发送消息异常: {e}")
+        return False
+
+
+def main():
+    """主函数"""
+    print("=" * 60)
+    print(f"📺 每日影视推荐任务开始 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * 60)
+    
+    # 获取实时数据
+    print("\n[1/4] 📡 获取热门电视剧实时数据...")
+    tv_shows = get_realtime_data_tv()
+    print(f"✓ 获取到 {len(tv_shows)} 部电视剧")
+    
+    print("\n[2/4] 📡 获取热门电影实时数据...")
+    movies = get_realtime_data_movie()
+    print(f"✓ 获取到 {len(movies)} 部电影")
+    
+    # 显示数据摘要
+    print("\n[数据摘要]")
+    print(f"  电视剧: {', '.join([tv['title'] for tv in tv_shows[:3]])}...")
+    print(f"  电影: {', '.join([movie['title'] for movie in movies[:3]])}...")
+    
+    # 格式化美化消息
+    print("\n[3/4] 🎨 格式化美化推送消息...")
+    title = f"📺 每日影视推荐 {datetime.now().strftime('%Y%m%d')}"
+    content = format_markdown_message(tv_shows, movies)
+    print(f"✓ 消息格式化完成 (长度: {len(content)} 字符)")
+    
+    # 发送推送
+    print("\n[4/4] 📤 推送到微信...")
+    if send_to_wechat(title, content):
+        print("✓✓✓ 任务执行成功! ✓✓✓")
+    else:
+        print("✗✗✗ 推送失败 ✗✗✗")
+    
+    print("=" * 60)
+    print(f"任务结束 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    import os
+    SENDKEY = os.getenv('SENDKEY')
+    main()
