@@ -1,0 +1,35 @@
+name: 每日影视推荐推送
+
+on:
+  # 每天北京时间 10:00 执行（UTC 时间 02:00）
+  schedule:
+    - cron: '0 2 * * *'
+  # 支持手动触发测试
+  workflow_dispatch:
+
+jobs:
+  daily_recommend:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. 拉取代码
+      - name: 拉取代码
+        uses: actions/checkout@v4
+      
+      # 2. 设置 Python 环境
+      - name: 配置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      # 3. 安装依赖
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      # 4. 执行推荐脚本
+      - name: 执行影视推荐脚本
+        run: python daily_tv_recommendation.py
+        env:
+          SENDKEY: ${{ secrets.SENDKEY }}
